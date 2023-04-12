@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   image: {
     position: "relative",
-    width: "50%",
+    width: "49%",
     marginBottom: 1,
     resizeMode: "contain",
   },
