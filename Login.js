@@ -13,12 +13,14 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import SignUp from "./SignUp";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showSignUp, setShowSignUp] = useState(false);
 
   function validateEmail(email) {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -29,6 +31,12 @@ export default function Login() {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   }
+
+  function toggleSignUp() {
+    setShowSignUp(!showSignUp);
+  }
+
+  
 
   function handleSubmit() {
     let isValid = true;
@@ -51,7 +59,9 @@ export default function Login() {
 
     }
   }
-  return (
+  return showSignUp ? (
+    <SignUp toggleSignUp={toggleSignUp} />
+  ) : (
 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <KeyboardAvoidingView
         style={styles.container}
@@ -85,6 +95,9 @@ export default function Login() {
       <TouchableOpacity onPress={handleSubmit} style={styles.loginBtn}>
         <Text style={styles.loginText}>LOGIN</Text> 
       </TouchableOpacity> 
+      <TouchableOpacity onPress={toggleSignUp} style={styles.signupBtn}>
+            <Text style={styles.signupText}>Sign Up</Text>
+          </TouchableOpacity>
     </View> 
     </KeyboardAvoidingView>
 </TouchableWithoutFeedback>
@@ -102,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#193153",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 40,
+    paddingTop: -30,
   },
   contentContainer: {
     flexGrow: 1,
@@ -116,8 +129,8 @@ const styles = StyleSheet.create({
   },
   image: {
     position: "relative",
-    width: "49%",
-    marginBottom: 1,
+    width: "65%",
+    marginBottom: -45,
     resizeMode: "contain",
   },
   inputView: {
@@ -135,7 +148,8 @@ const styles = StyleSheet.create({
   },
   forgot_button: {
     height: 30,
-    marginBottom: 30,
+    marginBottom: 20,
+    color: "white",
   },
   loginBtn: {
     width: "80%",
@@ -143,7 +157,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 5,
     backgroundColor: "#fff",
   },
   loginText: {
@@ -152,5 +166,17 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     marginBottom: 5,
+  },
+  signupBtn: {
+    width: "80%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    backgroundColor: "#949494",
+  },
+  signupText: {
+    color: "white",
   },
 });
