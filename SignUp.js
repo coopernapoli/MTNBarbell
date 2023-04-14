@@ -10,14 +10,52 @@ import {View,
     KeyboardAvoidingView,} from 'react-native';
 
 
-export default function SignUp ({toggleSignUp}) {
+export default function SignUp ({toggleSignUp, validateEmail, validatePassword}) {
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const handleSubmit = () => {
+    let isValid = true;
+
+    if (!validateEmail(newEmail)) {
+      setEmailError("Please enter a valid email.");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (!validatePassword(newPassword)) {
+      setPasswordError("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        setConfirmPasswordError("Passwords do not match.");
+        isValid = false;
+      } else {
+        setConfirmPasswordError("");
+      }
+
+    if (isValid) {
+      // Perform the sign-up process here
+    }
     
   };
+  function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+  
+  function validatePassword(password) {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  }
 
   return (
 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -34,9 +72,9 @@ export default function SignUp ({toggleSignUp}) {
         value={newEmail}
         keyboardType="email-address"
         autoCapitalize="none"
-        textAlign='right'
       />
       </View>
+      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
       <View style={styles.inputWrapper}>
       <TextInput
         style={styles.input}
@@ -47,6 +85,7 @@ export default function SignUp ({toggleSignUp}) {
         autoCapitalize="none"
       />
       </View>
+      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
       <View style={styles.inputWrapper}>
       <TextInput
         style={styles.input}
@@ -57,6 +96,7 @@ export default function SignUp ({toggleSignUp}) {
         autoCapitalize="none"
       />
       </View>
+      {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
@@ -71,17 +111,19 @@ export default function SignUp ({toggleSignUp}) {
 
 const styles = StyleSheet.create({
 inputWrapper: {
-    width: '80%',
-    borderColor: 'gray',
+    width: '100%',
+    borderColor: '949494',
     borderWidth: 1,
     borderRadius: 5,
-    padding: 10,
+    padding: 14,
     marginBottom: 10,
+    flexDirection: 'row',
+    textAlign: "center",
     },
+
 input: {
-    flex:1,
-    },
-    
+    width: "40%"
+   },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -103,4 +145,8 @@ input: {
     color: 'white',
     fontWeight: 'bold',
   },
+  errorText: {
+    color: "red",
+    padding: 3
+  }
 });
